@@ -1,3 +1,7 @@
+export type CodingError =
+  | EncodingError
+  | DecodingError
+
 export class EncodingError extends Error {
   readonly #class = DecodingError
   readonly name = this.#class.name
