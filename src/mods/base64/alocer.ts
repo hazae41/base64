@@ -2,6 +2,7 @@ import type { Alocer } from "@hazae41/alocer"
 import { Result } from "@hazae41/result"
 import { Adapter } from "./base64.js"
 import { fromBuffer } from "./buffer.js"
+import { DecodingError, EncodingError } from "./error.js"
 
 export function fromBufferOrAlocer(alocer: typeof Alocer) {
   if ("process" in globalThis)
@@ -12,11 +13,11 @@ export function fromBufferOrAlocer(alocer: typeof Alocer) {
 export function fromAlocer(alocer: typeof Alocer): Adapter {
 
   function tryEncode(bytes: Uint8Array) {
-    return Result.runAndDoubleWrapSync(() => alocer.base64_encode(bytes))
+    return Result.runAndWrapSync(() => alocer.base64_encode(bytes)).mapErrSync(EncodingError.from)
   }
 
   function tryDecode(text: string) {
-    return Result.runAndDoubleWrapSync(() => alocer.base64_decode(text))
+    return Result.runAndWrapSync(() => alocer.base64_decode(text)).mapErrSync(DecodingError.from)
   }
 
   return { tryEncode, tryDecode }

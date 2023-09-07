@@ -2,6 +2,7 @@ import { Cursor, CursorWriteError } from "@hazae41/cursor"
 import { Option, Some } from "@hazae41/option"
 import { Ok, Result } from "@hazae41/result"
 import { fromBuffer } from "./buffer.js"
+import { DecodingError, EncodingError } from "./error.js"
 
 let global: Option<Adapter> = new Some(fromBuffer())
 
@@ -58,7 +59,7 @@ export class Copied implements Copiable {
 }
 
 export interface Adapter {
-  tryEncode(bytes: Uint8Array): Result<string, Error>
-  tryDecode(text: string): Result<Copiable, Error>
+  tryEncode(bytes: Uint8Array): Result<string, EncodingError>
+  tryDecode(text: string): Result<Copiable, DecodingError>
 }
 
