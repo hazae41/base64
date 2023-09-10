@@ -2,7 +2,7 @@ import type { Alocer } from "@hazae41/alocer"
 import { Result } from "@hazae41/result"
 import { Adapter } from "./base64.js"
 import { fromBuffer } from "./buffer.js"
-import { DecodingError, EncodingError } from "./error.js"
+import { DecodingError, EncodingError } from "./errors.js"
 
 export function fromBufferOrAlocer(alocer: typeof Alocer) {
   if ("process" in globalThis)

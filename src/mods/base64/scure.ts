@@ -2,7 +2,7 @@ import { Result } from "@hazae41/result"
 import type { base64 } from "@scure/base"
 import { Adapter, Copied } from "./base64.js"
 import { fromBuffer } from "./buffer.js"
-import { DecodingError, EncodingError } from "./error.js"
+import { DecodingError, EncodingError } from "./errors.js"
 
 export function fromBufferOrScure(scure: typeof base64) {
   if ("process" in globalThis)

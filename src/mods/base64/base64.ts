@@ -2,7 +2,7 @@ import { Cursor, CursorWriteError } from "@hazae41/cursor"
 import { Option, Some } from "@hazae41/option"
 import { Ok, Result } from "@hazae41/result"
 import { fromBuffer } from "./buffer.js"
-import { DecodingError, EncodingError } from "./error.js"
+import { DecodingError, EncodingError } from "./errors.js"
 
 let global: Option<Adapter> = new Some(fromBuffer())
 
