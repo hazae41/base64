@@ -16,33 +16,36 @@ npm i @hazae41/base64
 
 ## Getting started
 
-### Alocer (WebAssembly)
+### Buffer (NodeJS)
 
 ```typescript
 import { Base64 } from "@hazae41/base64"
-import { Alocer } from "@hazae41/alocer"
 
-await Alocer.initBundledOnce()
-const base64 = Base64.fromAlocer(Alocer)
+Base64.set(Base64.fromBuffer())
+```
 
-/**
- * Set it globally (optional)
- **/
-Base64.set(base64)
+### Alocer (WebAssembly)
+
+```bash
+npm i @hazae41/alocer
+```
+
+```typescript
+import { Base64 } from "@hazae41/base64"
+
+Base64.set(await Base64.fromBufferOrAlocer())
 ```
 
 ### Scure (JavaScript)
 
+```bash
+npm i @scure/base
+```
+
 ```typescript
 import { Base64 } from "@hazae41/base64"
-import * as scure from "@scure/base"
 
-const base64 = Base64.fromScure(scure.base64)
-
-/**
- * Set it globally (optional)
- **/
-Base64.set(base64)
+Base64.set(Base64.fromBufferOrScure())
 ```
 
 ## Usage
@@ -50,6 +53,6 @@ Base64.set(base64)
 ### Direct
 
 ```tsx
-const encoded: string = base64.tryEncode(new Uint8Array([1,2,3,4,5])).unwrap()
-const decoded: Uint8Array = base64.tryDecode(encoded).unwrap().copy()
+const encoded: string = Base64.get().tryEncode(new Uint8Array([1,2,3,4,5])).unwrap()
+const decoded: Uint8Array = Base64.get().tryDecode(encoded).unwrap().copyAndDispose()
 ```
