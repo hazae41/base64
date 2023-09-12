@@ -13,13 +13,21 @@ export async function fromBufferOrAlocer() {
 export async function fromAlocer(): Promise<Adapter> {
   await Alocer.initBundledOnce()
 
-  function tryEncode(bytes: Uint8Array) {
-    return Result.runAndWrapSync(() => Alocer.base64_encode(bytes)).mapErrSync(EncodeError.from)
+  function tryEncodePadded(bytes: Uint8Array) {
+    return Result.runAndWrapSync(() => Alocer.base64_encode_padded(bytes)).mapErrSync(EncodeError.from)
   }
 
-  function tryDecode(text: string) {
-    return Result.runAndWrapSync(() => Alocer.base64_decode(text)).mapErrSync(DecodeError.from)
+  function tryDecodePadded(text: string) {
+    return Result.runAndWrapSync(() => Alocer.base64_decode_padded(text)).mapErrSync(DecodeError.from)
   }
 
-  return { tryEncode, tryDecode }
+  function tryEncodeUnpadded(bytes: Uint8Array) {
+    return Result.runAndWrapSync(() => Alocer.base64_encode_unpadded(bytes)).mapErrSync(EncodeError.from)
+  }
+
+  function tryDecodeUnpadded(text: string) {
+    return Result.runAndWrapSync(() => Alocer.base64_decode_unpadded(text)).mapErrSync(DecodeError.from)
+  }
+
+  return { tryEncodePadded, tryDecodePadded, tryEncodeUnpadded, tryDecodeUnpadded }
 }

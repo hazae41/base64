@@ -12,13 +12,25 @@ export function fromBufferOrScure() {
 
 export function fromScure(): Adapter {
 
-  function tryEncode(bytes: Uint8Array) {
+  function tryEncodePadded(bytes: Uint8Array) {
     return Result.runAndWrapSync(() => base64.encode(bytes)).mapErrSync(EncodeError.from)
   }
 
-  function tryDecode(text: string) {
+  function tryDecodePadded(text: string) {
     return Result.runAndWrapSync(() => base64.decode(text)).mapSync(Copied.new).mapErrSync(DecodeError.from)
   }
 
-  return { tryEncode, tryDecode }
+  function tryEncodeUnpadded(bytes: Uint8Array) {
+    return Result.runAndWrapSync(() => {
+      return base64.encode(bytes).replaceAll("=", "")
+    }).mapErrSync(EncodeError.from)
+  }
+
+  function tryDecodeUnpadded(text: string) {
+    return Result.runAndWrapSync(() => {
+      return base64.decode(text.padEnd(text.length + ((4 - (text.length % 4)) % 4), "="))
+    }).mapSync(Copied.new).mapErrSync(DecodeError.from)
+  }
+
+  return { tryEncodePadded, tryDecodePadded, tryEncodeUnpadded, tryDecodeUnpadded }
 }

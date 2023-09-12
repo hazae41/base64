@@ -53,6 +53,6 @@ Base64.set(Base64.fromBufferOrScure())
 ### Direct
 
 ```tsx
-const encoded: string = Base64.get().tryEncode(new Uint8Array([1,2,3,4,5])).unwrap()
-const decoded: Uint8Array = Base64.get().tryDecode(encoded).unwrap().copyAndDispose()
+const encoded: string = Base64.get().tryEncodePadded(new Uint8Array([1,2,3,4,5])).unwrap()
+const decoded: Uint8Array = Base64.get().tryDecodePadded(encoded).unwrap().copyAndDispose()
 ```

@@ -59,7 +59,9 @@ export class Copied implements Copiable {
 }
 
 export interface Adapter {
-  tryEncode(bytes: Uint8Array): Result<string, EncodeError>
-  tryDecode(text: string): Result<Copiable, DecodeError>
+  tryEncodePadded(bytes: Uint8Array): Result<string, EncodeError>
+  tryDecodePadded(text: string): Result<Copiable, DecodeError>
+  tryEncodeUnpadded(bytes: Uint8Array): Result<string, EncodeError>
+  tryDecodeUnpadded(text: string): Result<Copiable, DecodeError>
 }
 
