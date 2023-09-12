@@ -1,31 +1,31 @@
-export type CodingError =
-  | EncodingError
-  | DecodingError
+export type AnyError =
+  | EncodeError
+  | DecodeError
 
-export class EncodingError extends Error {
-  readonly #class = DecodingError
+export class EncodeError extends Error {
+  readonly #class = DecodeError
   readonly name = this.#class.name
 
-  constructor(options: ErrorOptions) {
+  constructor(options?: ErrorOptions) {
     super(`Could not encode`, options)
   }
 
   static from(cause: unknown) {
-    return new EncodingError({ cause })
+    return new EncodeError({ cause })
   }
 
 }
 
-export class DecodingError extends Error {
-  readonly #class = DecodingError
+export class DecodeError extends Error {
+  readonly #class = DecodeError
   readonly name = this.#class.name
 
-  constructor(options: ErrorOptions) {
+  constructor(options?: ErrorOptions) {
     super(`Could not decode`, options)
   }
 
   static from(cause: unknown) {
-    return new DecodingError({ cause })
+    return new DecodeError({ cause })
   }
 
 }
