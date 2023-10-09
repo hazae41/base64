@@ -1,4 +1,5 @@
 import { Alocer } from "@hazae41/alocer"
+import { Box, Copiable } from "@hazae41/box"
 import { Result } from "@hazae41/result"
 import { Adapter } from "./adapter.js"
 import { fromBuffer } from "./buffer.js"
@@ -13,7 +14,7 @@ export async function fromBufferOrAlocer() {
 export async function fromAlocer(): Promise<Adapter> {
   await Alocer.initBundledOnce()
 
-  function tryEncodePadded(bytes: Uint8Array) {
+  function tryEncodePadded(bytes: Box<Copiable>) {
     return Result.runAndWrapSync(() => Alocer.base64_encode_padded(bytes)).mapErrSync(EncodeError.from)
   }
 
@@ -21,7 +22,7 @@ export async function fromAlocer(): Promise<Adapter> {
     return Result.runAndWrapSync(() => Alocer.base64_decode_padded(text)).mapErrSync(DecodeError.from)
   }
 
-  function tryEncodeUnpadded(bytes: Uint8Array) {
+  function tryEncodeUnpadded(bytes: Box<Copiable>) {
     return Result.runAndWrapSync(() => Alocer.base64_encode_unpadded(bytes)).mapErrSync(EncodeError.from)
   }
 
