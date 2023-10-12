@@ -1,4 +1,4 @@
-import { Box, Copiable, Copied } from "@hazae41/box"
+import { BytesOrCopiable, Copied } from "@hazae41/box"
 import { Result } from "@hazae41/result"
 import { Buffers } from "libs/buffers/buffers.js"
 import { Bytes } from "libs/bytes/bytes.js"
@@ -7,9 +7,13 @@ import { DecodeError, EncodeError } from "./errors.js"
 
 export function fromBuffer(): Adapter {
 
-  function tryEncodePadded(bytes: Box<Copiable>) {
+  function getBytes(bytes: BytesOrCopiable) {
+    return "bytes" in bytes ? bytes.bytes : bytes
+  }
+
+  function tryEncodePadded(bytes: BytesOrCopiable) {
     return Result.runAndWrapSync(() => {
-      return Buffers.fromView(bytes.get().bytes).toString("base64")
+      return Buffers.fromView(getBytes(bytes)).toString("base64")
     }).mapErrSync(EncodeError.from)
   }
 
@@ -19,9 +23,9 @@ export function fromBuffer(): Adapter {
     }).mapSync(Copied.new).mapErrSync(DecodeError.from)
   }
 
-  function tryEncodeUnpadded(bytes: Box<Copiable>) {
+  function tryEncodeUnpadded(bytes: BytesOrCopiable) {
     return Result.runAndWrapSync(() => {
-      return Buffers.fromView(bytes.get().bytes).toString("base64").replaceAll("=", "")
+      return Buffers.fromView(getBytes(bytes)).toString("base64").replaceAll("=", "")
     }).mapErrSync(EncodeError.from)
   }
 
