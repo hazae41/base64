@@ -11,29 +11,45 @@ export function fromBuffer(): Adapter {
     return "bytes" in bytes ? bytes.bytes : bytes
   }
 
+  function encodePaddedOrThrow(bytes: BytesOrCopiable) {
+    return Buffers.fromView(getBytes(bytes)).toString("base64")
+  }
+
   function tryEncodePadded(bytes: BytesOrCopiable) {
     return Result.runAndWrapSync(() => {
-      return Buffers.fromView(getBytes(bytes)).toString("base64")
+      return encodePaddedOrThrow(bytes)
     }).mapErrSync(EncodeError.from)
+  }
+
+  function decodePaddedOrThrow(text: string) {
+    return new Copied(Bytes.fromView(Buffer.from(text, "base64")))
   }
 
   function tryDecodePadded(text: string) {
     return Result.runAndWrapSync(() => {
-      return Bytes.fromView(Buffer.from(text, "base64"))
-    }).mapSync(Copied.new).mapErrSync(DecodeError.from)
+      return decodePaddedOrThrow(text)
+    }).mapErrSync(DecodeError.from)
+  }
+
+  function encodeUnpaddedOrThrow(bytes: BytesOrCopiable) {
+    return Buffers.fromView(getBytes(bytes)).toString("base64").replaceAll("=", "")
   }
 
   function tryEncodeUnpadded(bytes: BytesOrCopiable) {
     return Result.runAndWrapSync(() => {
-      return Buffers.fromView(getBytes(bytes)).toString("base64").replaceAll("=", "")
+      return encodeUnpaddedOrThrow(bytes)
     }).mapErrSync(EncodeError.from)
+  }
+
+  function decodeUnpaddedOrThrow(text: string) {
+    return new Copied(Bytes.fromView(Buffer.from(text, "base64")))
   }
 
   function tryDecodeUnpadded(text: string) {
     return Result.runAndWrapSync(() => {
-      return Bytes.fromView(Buffer.from(text, "base64"))
-    }).mapSync(Copied.new).mapErrSync(DecodeError.from)
+      return decodeUnpaddedOrThrow(text)
+    }).mapErrSync(DecodeError.from)
   }
 
-  return { tryEncodePadded, tryDecodePadded, tryEncodeUnpadded, tryDecodeUnpadded }
+  return { encodePaddedOrThrow, tryEncodePadded, decodePaddedOrThrow, tryDecodePadded, encodeUnpaddedOrThrow, tryEncodeUnpadded, decodeUnpaddedOrThrow, tryDecodeUnpadded }
 }

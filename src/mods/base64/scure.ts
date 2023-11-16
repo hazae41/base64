@@ -17,29 +17,45 @@ export function fromScure(): Adapter {
     return "bytes" in bytes ? bytes.bytes : bytes
   }
 
+  function encodePaddedOrThrow(bytes: BytesOrCopiable) {
+    return base64.encode(getBytes(bytes))
+  }
+
   function tryEncodePadded(bytes: BytesOrCopiable) {
     return Result.runAndWrapSync(() => {
-      return base64.encode(getBytes(bytes))
+      return encodePaddedOrThrow(bytes)
     }).mapErrSync(EncodeError.from)
+  }
+
+  function decodePaddedOrThrow(text: string) {
+    return new Copied(base64.decode(text))
   }
 
   function tryDecodePadded(text: string) {
     return Result.runAndWrapSync(() => {
-      return base64.decode(text)
-    }).mapSync(Copied.new).mapErrSync(DecodeError.from)
+      return decodePaddedOrThrow(text)
+    }).mapErrSync(DecodeError.from)
+  }
+
+  function encodeUnpaddedOrThrow(bytes: BytesOrCopiable) {
+    return base64.encode(getBytes(bytes)).replaceAll("=", "")
   }
 
   function tryEncodeUnpadded(bytes: BytesOrCopiable) {
     return Result.runAndWrapSync(() => {
-      return base64.encode(getBytes(bytes)).replaceAll("=", "")
+      return encodeUnpaddedOrThrow(bytes)
     }).mapErrSync(EncodeError.from)
+  }
+
+  function decodeUnpaddedOrThrow(text: string) {
+    return new Copied(base64.decode(text.padEnd(text.length + ((4 - (text.length % 4)) % 4), "=")))
   }
 
   function tryDecodeUnpadded(text: string) {
     return Result.runAndWrapSync(() => {
-      return base64.decode(text.padEnd(text.length + ((4 - (text.length % 4)) % 4), "="))
-    }).mapSync(Copied.new).mapErrSync(DecodeError.from)
+      return decodeUnpaddedOrThrow(text)
+    }).mapErrSync(DecodeError.from)
   }
 
-  return { tryEncodePadded, tryDecodePadded, tryEncodeUnpadded, tryDecodeUnpadded }
+  return { encodePaddedOrThrow, tryEncodePadded, decodePaddedOrThrow, tryDecodePadded, encodeUnpaddedOrThrow, tryEncodeUnpadded, decodeUnpaddedOrThrow, tryDecodeUnpadded }
 }

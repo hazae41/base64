@@ -22,33 +22,49 @@ export async function fromAlocer(): Promise<Adapter> {
     return Box.new(new Alocer.Memory(bytesOrCopiable.bytes))
   }
 
-  function tryEncodePadded(bytes: BytesOrCopiable) {
+  function encodePaddedOrThrow(bytes: BytesOrCopiable) {
     using memory = getMemory(bytes)
 
+    return Alocer.base64_encode_padded(memory.inner)
+  }
+
+  function tryEncodePadded(bytes: BytesOrCopiable) {
     return Result.runAndWrapSync(() => {
-      return Alocer.base64_encode_padded(memory.inner)
+      return encodePaddedOrThrow(bytes)
     }).mapErrSync(EncodeError.from)
+  }
+
+  function decodePaddedOrThrow(text: string) {
+    return Alocer.base64_decode_padded(text)
   }
 
   function tryDecodePadded(text: string) {
     return Result.runAndWrapSync(() => {
-      return Alocer.base64_decode_padded(text)
+      return decodePaddedOrThrow(text)
     }).mapErrSync(DecodeError.from)
   }
 
-  function tryEncodeUnpadded(bytes: BytesOrCopiable) {
+  function encodeUnpaddedOrThrow(bytes: BytesOrCopiable) {
     using memory = getMemory(bytes)
 
+    return Alocer.base64_encode_unpadded(memory.inner)
+  }
+
+  function tryEncodeUnpadded(bytes: BytesOrCopiable) {
     return Result.runAndWrapSync(() => {
-      return Alocer.base64_encode_unpadded(memory.inner)
+      return encodeUnpaddedOrThrow(bytes)
     }).mapErrSync(EncodeError.from)
+  }
+
+  function decodeUnpaddedOrThrow(text: string) {
+    return Alocer.base64_decode_unpadded(text)
   }
 
   function tryDecodeUnpadded(text: string) {
     return Result.runAndWrapSync(() => {
-      return Alocer.base64_decode_unpadded(text)
+      return decodeUnpaddedOrThrow(text)
     }).mapErrSync(DecodeError.from)
   }
 
-  return { tryEncodePadded, tryDecodePadded, tryEncodeUnpadded, tryDecodeUnpadded }
+  return { encodePaddedOrThrow, tryEncodePadded, decodePaddedOrThrow, tryDecodePadded, encodeUnpaddedOrThrow, tryEncodeUnpadded, decodeUnpaddedOrThrow, tryDecodeUnpadded }
 }
