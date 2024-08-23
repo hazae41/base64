@@ -1,70 +1,47 @@
-import { Alocer } from "@hazae41/alocer"
-import { Box, BytesOrCopiable } from "@hazae41/box"
-import { Result } from "@hazae41/result"
+import { type Base64Wasm } from "@hazae41/base64.wasm"
+import { Box } from "@hazae41/box"
+import { BytesOrCopiable } from "libs/copiable/index.js"
 import { Adapter } from "./adapter.js"
 import { fromBuffer } from "./buffer.js"
-import { DecodeError, EncodeError } from "./errors.js"
 
-export async function fromBufferOrAlocer() {
+export async function fromBufferOrWasm(wasm: typeof Base64Wasm) {
   if ("process" in globalThis)
     return fromBuffer()
-  return await fromAlocer()
+  return await fromWasm(wasm)
 }
 
-export async function fromAlocer(): Promise<Adapter> {
-  await Alocer.initBundledOnce()
+export async function fromWasm(wasm: typeof Base64Wasm) {
+  const { initBundled, Memory, base64_encode_padded, base64_decode_padded, base64_encode_unpadded, base64_decode_unpadded } = wasm
+
+  await initBundled()
 
   function getMemory(bytesOrCopiable: BytesOrCopiable) {
-    if (bytesOrCopiable instanceof Alocer.Memory)
-      return Box.greedy(bytesOrCopiable)
+    if (bytesOrCopiable instanceof Memory)
+      return Box.createAsMoved(bytesOrCopiable)
     if (bytesOrCopiable instanceof Uint8Array)
-      return Box.new(new Alocer.Memory(bytesOrCopiable))
-    return Box.new(new Alocer.Memory(bytesOrCopiable.bytes))
+      return Box.create(new Memory(bytesOrCopiable))
+    return Box.create(new Memory(bytesOrCopiable.bytes))
   }
 
   function encodePaddedOrThrow(bytes: BytesOrCopiable) {
     using memory = getMemory(bytes)
 
-    return Alocer.base64_encode_padded(memory.inner)
-  }
-
-  function tryEncodePadded(bytes: BytesOrCopiable) {
-    return Result.runAndWrapSync(() => {
-      return encodePaddedOrThrow(bytes)
-    }).mapErrSync(EncodeError.from)
+    return base64_encode_padded(memory.inner)
   }
 
   function decodePaddedOrThrow(text: string) {
-    return Alocer.base64_decode_padded(text)
-  }
-
-  function tryDecodePadded(text: string) {
-    return Result.runAndWrapSync(() => {
-      return decodePaddedOrThrow(text)
-    }).mapErrSync(DecodeError.from)
+    return base64_decode_padded(text)
   }
 
   function encodeUnpaddedOrThrow(bytes: BytesOrCopiable) {
     using memory = getMemory(bytes)
 
-    return Alocer.base64_encode_unpadded(memory.inner)
-  }
-
-  function tryEncodeUnpadded(bytes: BytesOrCopiable) {
-    return Result.runAndWrapSync(() => {
-      return encodeUnpaddedOrThrow(bytes)
-    }).mapErrSync(EncodeError.from)
+    return base64_encode_unpadded(memory.inner)
   }
 
   function decodeUnpaddedOrThrow(text: string) {
-    return Alocer.base64_decode_unpadded(text)
+    return base64_decode_unpadded(text)
   }
 
-  function tryDecodeUnpadded(text: string) {
-    return Result.runAndWrapSync(() => {
-      return decodeUnpaddedOrThrow(text)
-    }).mapErrSync(DecodeError.from)
-  }
-
-  return { encodePaddedOrThrow, tryEncodePadded, decodePaddedOrThrow, tryDecodePadded, encodeUnpaddedOrThrow, tryEncodeUnpadded, decodeUnpaddedOrThrow, tryDecodeUnpadded }
+  return { encodePaddedOrThrow, decodePaddedOrThrow, encodeUnpaddedOrThrow, decodeUnpaddedOrThrow } satisfies Adapter
 }
