@@ -24,16 +24,17 @@ import { Base64 } from "@hazae41/base64"
 Base64.set(Base64.fromBuffer())
 ```
 
-### Alocer (WebAssembly)
+### WebAssembly
 
 ```bash
-npm i @hazae41/alocer
+npm i @hazae41/base64.wasm
 ```
 
 ```typescript
 import { Base64 } from "@hazae41/base64"
+import { Base64Wasm } from "@hazae41/base64.wasm"
 
-Base64.set(await Base64.fromBufferOrAlocer())
+Base64.set(await Base64.fromBufferOrWasm(Base64Wasm))
 ```
 
 ### Scure (JavaScript)
@@ -44,8 +45,9 @@ npm i @scure/base
 
 ```typescript
 import { Base64 } from "@hazae41/base64"
+import * as Scure from "@scure/base"
 
-Base64.set(Base64.fromBufferOrScure())
+Base64.set(Base64.fromBufferOrScure(Scure))
 ```
 
 ## Usage
@@ -53,6 +55,9 @@ Base64.set(Base64.fromBufferOrScure())
 ### Direct
 
 ```tsx
-const encoded: string = Base64.get().tryEncodePadded(new Uint8Array([1,2,3,4,5])).unwrap()
-const decoded: Uint8Array = Base64.get().tryDecodePadded(encoded).unwrap().copyAndDispose()
+const encoded: string = Base64.get().getOrThrow().encodePaddedOrThrow(new Uint8Array([1,2,3,4,5]))
+
+using memory = Base64.get().getOrThrow().decodePaddedOrThrow(encoded)
+
+const decoded: Uint8Array = memory.bytes.slice()
 ```
