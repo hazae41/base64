@@ -56,8 +56,6 @@ Base64.set(Base64.fromBufferOrScure(Scure))
 
 ```tsx
 const encoded: string = Base64.get().getOrThrow().encodePaddedOrThrow(new Uint8Array([1,2,3,4,5]))
-
-using memory = Base64.get().getOrThrow().decodePaddedOrThrow(encoded)
-
-const decoded: Uint8Array = memory.bytes.slice()
+using decoded: Memory = Base64.get().getOrThrow().decodePaddedOrThrow(encoded)
+const decoded2: Uint8Array = decoded.bytes.slice()
 ```

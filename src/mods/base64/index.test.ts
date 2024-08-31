@@ -12,13 +12,13 @@ test("encode and decode", async ({ message }) => {
   const encodeda = scure.encodePaddedOrThrow(new Uint8Array([1, 2, 3, 4, 5, 6, 7]))
   using decodeda = scure.decodePaddedOrThrow(encodeda)
 
-  console.log(encodeda, decodeda)
+  console.log(encodeda, decodeda.bytes)
 
   const alocer = await fromWasm(Base64Wasm)
   const encodedb = alocer.encodePaddedOrThrow(new Uint8Array([1, 2, 3, 4, 5, 6, 7]))
   using decodedb = alocer.decodePaddedOrThrow(encodedb)
 
-  console.log(encodedb, decodedb)
+  console.log(encodedb, decodedb.bytes)
 
   assert(encodeda === encodedb)
   assert(Buffer.from(decodeda.bytes).equals(Buffer.from(decodedb.bytes)))
