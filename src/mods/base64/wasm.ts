@@ -1,4 +1,4 @@
-import { type Base64Wasm } from "@hazae41/base64.wasm"
+import type { Base64Wasm } from "@hazae41/base64.wasm"
 import { Box } from "@hazae41/box"
 import { BytesOrCopiable } from "libs/copiable/index.js"
 import { Adapter } from "./adapter.js"
