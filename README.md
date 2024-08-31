@@ -34,7 +34,9 @@ npm i @hazae41/base64.wasm
 import { Base64 } from "@hazae41/base64"
 import { Base64Wasm } from "@hazae41/base64.wasm"
 
-Base64.set(await Base64.fromBufferOrWasm(Base64Wasm))
+await Base64Wasm.initBundled()
+
+Base64.set(Base64.fromBufferOrWasm(Base64Wasm))
 ```
 
 ### Scure (JavaScript)

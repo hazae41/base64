@@ -4,16 +4,14 @@ import { BytesOrCopiable } from "libs/copiable/index.js"
 import { Adapter } from "./adapter.js"
 import { fromBuffer } from "./buffer.js"
 
-export async function fromBufferOrWasm(wasm: typeof Base64Wasm) {
+export function fromBufferOrWasm(wasm: typeof Base64Wasm) {
   if ("process" in globalThis)
     return fromBuffer()
-  return await fromWasm(wasm)
+  return fromWasm(wasm)
 }
 
-export async function fromWasm(wasm: typeof Base64Wasm) {
-  const { initBundled, Memory, base64_encode_padded, base64_decode_padded, base64_encode_unpadded, base64_decode_unpadded } = wasm
-
-  await initBundled()
+export function fromWasm(wasm: typeof Base64Wasm) {
+  const { Memory, base64_encode_padded, base64_decode_padded, base64_encode_unpadded, base64_decode_unpadded } = wasm
 
   function getMemory(bytesOrCopiable: BytesOrCopiable) {
     if (bytesOrCopiable instanceof Memory)
