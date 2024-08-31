@@ -9,16 +9,16 @@ import * as Scure from "@scure/base"
 
 test("encode and decode", async ({ message }) => {
   const scure = fromScure(Scure)
-  const encodeda = scure.encodePaddedOrThrow(new Uint8Array([1, 2, 3, 4, 5, 6, 7]))
-  using decodeda = scure.decodePaddedOrThrow(encodeda)
+  const encodeda = scure.encodeUnpaddedOrThrow(new Uint8Array([1, 2, 3, 4, 5, 6, 7]))
+  using decodeda = scure.decodeUnpaddedOrThrow(encodeda)
 
   console.log(encodeda, decodeda.bytes)
 
   await Base64Wasm.initBundled()
 
   const wasm = fromWasm(Base64Wasm)
-  const encodedb = wasm.encodePaddedOrThrow(new Uint8Array([1, 2, 3, 4, 5, 6, 7]))
-  using decodedb = wasm.decodePaddedOrThrow(encodedb)
+  const encodedb = wasm.encodeUnpaddedOrThrow(new Uint8Array([1, 2, 3, 4, 5, 6, 7]))
+  using decodedb = wasm.decodeUnpaddedOrThrow(encodedb)
 
   console.log(encodedb, decodedb.bytes)
 

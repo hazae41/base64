@@ -10,7 +10,7 @@ export function fromBufferOrScure(scure: typeof Scure) {
 }
 
 export function fromScure(scure: typeof Scure) {
-  const { base64 } = scure
+  const { base64, base64nopad } = scure
 
   function getBytes(bytes: BytesOrCopiable) {
     return "bytes" in bytes ? bytes.bytes : bytes
@@ -25,11 +25,11 @@ export function fromScure(scure: typeof Scure) {
   }
 
   function encodeUnpaddedOrThrow(bytes: BytesOrCopiable) {
-    return base64.encode(getBytes(bytes)).replaceAll("=", "")
+    return base64nopad.encode(getBytes(bytes))
   }
 
   function decodeUnpaddedOrThrow(text: string) {
-    return new Copied(base64.decode(text.padEnd(text.length + ((4 - (text.length % 4)) % 4), "=")))
+    return new Copied(base64nopad.decode(text))
   }
 
   return { encodePaddedOrThrow, decodePaddedOrThrow, encodeUnpaddedOrThrow, decodeUnpaddedOrThrow } satisfies Adapter
