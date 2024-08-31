@@ -52,10 +52,8 @@ Base64.set(Base64.fromBufferOrScure(Scure))
 
 ## Usage
 
-### Direct
-
 ```tsx
 const encoded: string = Base64.get().getOrThrow().encodePaddedOrThrow(new Uint8Array([1,2,3,4,5]))
-using decoded: Memory = Base64.get().getOrThrow().decodePaddedOrThrow(encoded)
+using decoded: Copiable = Base64.get().getOrThrow().decodePaddedOrThrow(encoded)
 const decoded2: Uint8Array = decoded.bytes.slice()
 ```

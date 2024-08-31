@@ -14,9 +14,9 @@ test("encode and decode", async ({ message }) => {
 
   console.log(encodeda, decodeda.bytes)
 
-  const alocer = await fromWasm(Base64Wasm)
-  const encodedb = alocer.encodePaddedOrThrow(new Uint8Array([1, 2, 3, 4, 5, 6, 7]))
-  using decodedb = alocer.decodePaddedOrThrow(encodedb)
+  const wasm = await fromWasm(Base64Wasm)
+  const encodedb = wasm.encodePaddedOrThrow(new Uint8Array([1, 2, 3, 4, 5, 6, 7]))
+  using decodedb = wasm.decodePaddedOrThrow(encodedb)
 
   console.log(encodedb, decodedb.bytes)
 
