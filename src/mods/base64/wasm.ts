@@ -15,7 +15,7 @@ export function fromWasm(wasm: typeof Base64Wasm) {
 
   function getMemory(bytesOrCopiable: BytesOrCopiable) {
     if (bytesOrCopiable instanceof Memory)
-      return Box.createAsMoved(bytesOrCopiable)
+      return Box.createAsDropped(bytesOrCopiable)
     if (bytesOrCopiable instanceof Uint8Array)
       return Box.create(new Memory(bytesOrCopiable))
     return Box.create(new Memory(bytesOrCopiable.bytes))
@@ -24,7 +24,7 @@ export function fromWasm(wasm: typeof Base64Wasm) {
   function encodePaddedOrThrow(bytes: BytesOrCopiable) {
     using memory = getMemory(bytes)
 
-    return base64_encode_padded(memory.inner)
+    return base64_encode_padded(memory.value)
   }
 
   function decodePaddedOrThrow(text: string) {
@@ -34,7 +34,7 @@ export function fromWasm(wasm: typeof Base64Wasm) {
   function encodeUnpaddedOrThrow(bytes: BytesOrCopiable) {
     using memory = getMemory(bytes)
 
-    return base64_encode_unpadded(memory.inner)
+    return base64_encode_unpadded(memory.value)
   }
 
   function decodeUnpaddedOrThrow(text: string) {
