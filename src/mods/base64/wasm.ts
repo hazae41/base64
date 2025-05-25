@@ -1,5 +1,5 @@
 import type { Base64Wasm } from "@hazae41/base64.wasm"
-import { Box, Ref } from "@hazae41/box"
+import { Pin, Ref } from "@hazae41/box"
 import { BytesOrCopiable } from "libs/copiable/index.js"
 import { Adapter } from "./adapter.js"
 import { fromBuffer } from "./buffer.js"
@@ -18,9 +18,9 @@ export function fromWasm(wasm: typeof Base64Wasm) {
       return new Ref(bytesOrCopiable)
 
     if (bytesOrCopiable instanceof Uint8Array)
-      return Box.from(new Memory(bytesOrCopiable))
+      return Pin.from(new Memory(bytesOrCopiable))
 
-    return Box.from(new Memory(bytesOrCopiable.bytes))
+    return Pin.from(new Memory(bytesOrCopiable.bytes))
   }
 
   function encodePaddedOrThrow(bytes: BytesOrCopiable) {
