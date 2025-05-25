@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@hazae41/base64",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "Base64 adapter for WebAssembly and JS implementations",
   "homepage": "https://github.com/hazae41/base64",
   "repository": "github:hazae41/base64",
