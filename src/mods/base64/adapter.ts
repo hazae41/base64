@@ -1,5 +1,6 @@
+import { Memory } from "@hazae41/memory"
 import { Nullable, Option, Some } from "@hazae41/option"
-import { BytesOrCopiable, Copiable } from "libs/copiable/index.js"
+import { BytesOrMemory } from "libs/memory/index.js"
 import { fromBuffer } from "./buffer.js"
 
 let global: Option<Adapter> = new Some(fromBuffer())
@@ -13,10 +14,14 @@ export function set(value: Nullable<Adapter>) {
 }
 
 export interface Adapter {
-  encodePaddedOrThrow(bytes: BytesOrCopiable): string
-  decodePaddedOrThrow(text: string): Copiable
-
-  encodeUnpaddedOrThrow(bytes: BytesOrCopiable): string
-  decodeUnpaddedOrThrow(text: string): Copiable
+  readonly base64: Coder
+  readonly base64url: Coder
 }
 
+export interface Coder {
+  encodePaddedOrThrow(bytes: BytesOrMemory): string
+  decodePaddedOrThrow(text: string): Memory
+
+  encodeUnpaddedOrThrow(bytes: BytesOrMemory): string
+  decodeUnpaddedOrThrow(text: string): Memory
+}
