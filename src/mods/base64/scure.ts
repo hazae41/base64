@@ -1,6 +1,6 @@
-import { Slice } from "@hazae41/memory"
 import type * as Scure from "@scure/base"
-import { BytesOrMemory } from "libs/memory/index.js"
+
+import { BytesOrMemory, Slice } from "@hazae41/memory"
 import { Adapter } from "./adapter.js"
 import { fromBuffer } from "./buffer.js"
 import { fromNative } from "./native.js"

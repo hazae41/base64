@@ -1,6 +1,7 @@
 import type { Base64Wasm } from "@hazae41/base64.wasm"
+
 import { Ref } from "@hazae41/box"
-import { BytesOrMemory } from "libs/memory/index.js"
+import { BytesOrMemory } from "@hazae41/memory"
 import { fromBuffer } from "./buffer.js"
 import { fromNative } from "./native.js"
 
