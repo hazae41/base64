@@ -12,19 +12,22 @@ export function fromNativeOrBuffer() {
 export function fromBuffer() {
   return {
     encodePaddedOrThrow(bytes: Uint8Array) {
-      return Buffers.fromView(bytes).toString("base64")
+      const unpadded = Buffers.fromView(bytes).toString("base64url")
+      const repadded = unpadded + "=".repeat((4 - unpadded.length % 4) % 4)
+
+      return repadded
     },
 
     decodePaddedOrThrow(text: string) {
-      return Bytes.fromView(Buffer.from(text, "base64"))
+      return Bytes.fromView(Buffer.from(text, "base64url"))
     },
 
     encodeUnpaddedOrThrow(bytes: Uint8Array) {
-      return Buffers.fromView(bytes).toString("base64").replaceAll("=", "")
+      return Buffers.fromView(bytes).toString("base64url")
     },
 
     decodeUnpaddedOrThrow(text: string) {
-      return Bytes.fromView(Buffer.from(text, "base64"))
+      return Bytes.fromView(Buffer.from(text, "base64url"))
     }
   } satisfies Adapter
 }
