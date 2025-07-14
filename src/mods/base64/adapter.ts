@@ -1,9 +1,9 @@
 import { Memory } from "@hazae41/memory"
 import { Nullable, Option, Some } from "@hazae41/option"
 import { BytesOrMemory } from "libs/memory/index.js"
-import { fromBuffer } from "./buffer.js"
+import { fromNativeOrBuffer } from "./buffer.js"
 
-let global: Option<Adapter> = new Some(fromBuffer())
+let global: Option<Adapter> = new Some(fromNativeOrBuffer())
 
 export function get() {
   return global
