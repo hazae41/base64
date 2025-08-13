@@ -1,4 +1,4 @@
-import { Adapter } from "./adapter.js"
+import { Adapter } from "../adapter/index.js"
 
 declare global {
   interface Uint8Array {
@@ -6,7 +6,7 @@ declare global {
   }
 
   interface Uint8ArrayConstructor {
-    fromBase64(base64: string, options?: unknown): Uint8Array
+    fromBase64(base64: string, options?: unknown): Uint8Array<ArrayBuffer>
   }
 }
 
